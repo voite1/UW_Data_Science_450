@@ -1,0 +1,23 @@
+1. 6 steps of data science workflow:
+
+    1. Define the goal
+    2. Collect & Manage DAta
+    3. Build the Model
+    4. Evaluate & Critique Model
+    5. Present Results & Document
+    6. Deploy Model
+
+2. What is unsupervised learning? 
+   
+    It is a type of machin learning when class lables of the data are unknown.
+
+3. How do you avoid over-fitting your data?
+
+    Basically, it is whe a model has zero training errors and significant test errors.
+
+4. Name 3 machine learning algorithms 
+
+   Classification, Regression Trees, Logistic Regression, K-nearest Neighbors
+  
+5. Name 3 components of a time series
+
