@@ -1,5 +1,9 @@
 ## Oct 12, 2015 W.Taam
 #
+
+# Set working directory
+setwd("/Users/voitel/TRAINING/UW_Data_Science/UW_Data_Science_450/Week2")
+
 ## input data from PC
 dd <- read.csv('monthly_avg_gas_usage_jan71_oct79.txt', header=F, sep='', strip.white=T )
 
