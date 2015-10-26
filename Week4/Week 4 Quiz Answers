@@ -1,0 +1,35 @@
+1.What is the difference between correlation and causation? 
+
+  A correlation between variables does not mean that the change in one variable is the 
+  cause of the change in the other variable. Causation is when one event is the direct
+  result of the occurrence of the other event.
+
+2.What is more important – feature engineering or learning algorithms? Explain.
+  
+  Feature engineering is more important than learning algorithms because
+  feature engineering transforms the data into a set of worable features that represent
+  a problem. As a result feature engineering improves model accuracy on the yet to
+  be discovered data relationships.
+
+  Learning algorithims is simply memorizing how to apply algorithms to a particluar
+  set of problems. While learning algorithms is good, simple knowledge of the 
+  algorhithms cannot catch or utilize opportunities feature engineering can provide.
+
+3.Which is better – a simple model or a complex one? Explain. 
+
+  Simple model is generally better than a complex one. Basically, Complex model may introduce 
+  bias and also can lead to overfitting.
+
+4.What is the meaning of a stationary time series? 
+  
+  Statistically speaking, stationary time series have constat mean,  constan variance, and 
+  constant autocorrelation. Basically, the data in a stationary time seriese is hihgly 
+  predictible.
+  
+
+5.What 3 time series methods are captured by ARIMA?
+
+  CSS - Conditional sum of squares
+  CSS-ML - minimize conditional sum ofsquares to find starting values. Then maximum 
+    likelihood ( default)
+  ML - Maximul likelihood
