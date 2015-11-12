@@ -15,7 +15,6 @@ if(!file.exists(file.name)) {
     print("Reading data in memory")
     data = read.csv(file.name)
     print("Finished loading data in memory")
-    
 } else {
     # read CSV file in memory
     print("Data file exists, reading data file in memory")
@@ -42,5 +41,5 @@ print("Finished creating 'Weekend' column")
 
 # Clean workspace, remove variable that holds file name
 rm(file.name)
-
+print("Cleaned up workspace, removed 'file.name' variable")
 
