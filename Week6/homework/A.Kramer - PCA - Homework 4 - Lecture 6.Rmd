@@ -1,0 +1,104 @@
+---
+title: "PCA - Homework 4 - Lecture 6"
+author: "Aleksey Kramer"
+date: "November 14, 2015"
+output: html_document
+---
+#### After conduction Principle Component Analysis (as shown in the step-by-step manner below), components 1, 2, and 3 appear to explain 99% of the variance in the data set.
+
+#### Set working directory and load the dataset in the memory
+```{r}
+# Set working directory
+setwd('C:\\Users\\Aleksey\\Documents\\School\\UW_Data_Science\\UW_Data_Science_450\\Week6\\homework')
+
+# Read CSV file
+data = read.csv("women_TnF_1984.csv")
+```
+
+#### Look at the structure of the data
+```{r}
+# investigate data frame
+str(data)
+```
+
+#### Visually examine the dataset and remove unique identifier
+```{r}
+# look at the data
+head(data)
+
+# Discovered unique identifier data$Obs
+# Remove unique identifier
+data$Obs = NULL
+```
+
+#### Visually examine the dataset again and convert minutes to seconds for fields m800, m1500, m3000, and Marathon
+```{r}
+# display common stats
+summary(data)
+
+# display first 10 rows
+head(data)
+
+# Long way to convert data to seconds to be normalized
+data$m800 = data$m800 * 60 
+data$m1500 = data$m1500 * 60
+data$m3000 = data$m3000 * 60 
+data$Marathon = data$Marathon * 60
+```
+
+#### Visually inspect the data again.
+```{r}
+# display first 10 rows
+head(data)
+
+# display common stats again on the transformed data
+summary(data)
+```
+
+#### Naming rows in data to be country names from data[,1] and removing 'Country' field from the dataset
+```{r}
+
+rownames(data) = data[,1]
+data[,1] = NULL
+```
+
+#### Visually inspect the datset again
+```{r}
+# display first 10 rows to make sure Country column is removed
+head(data)
+```
+
+#### Perform Principal Component Analysis (PCA) and display its summary
+```{r}
+# Running PCA
+fit <- princomp(data, cor=TRUE)
+
+# Displaying summary of the fit
+summary(fit)
+```
+
+#### Display Loadings
+```{r}
+# Display loadings
+loadings(fit)
+```
+
+#### Plot the 'fit' obtained by running PCA. Plot clealy shows componnents 1, 2, and 3 to be the principal components derived (explain more than 99% of the variance in the dataset as seen in the display of loadings)
+```{r}
+# Plot the fit
+plot(fit, type="l")
+```
+
+#### Display the scores for each record
+```{r}
+# Display scores
+fit$scores
+```
+
+#### Create a biplot to visualize the directions of the most varying data (in 2D)
+```{r}
+# Display biplot
+biplot(fit)
+```
+
+#### End of PCA assignment
