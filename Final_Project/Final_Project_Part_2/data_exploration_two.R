@@ -1,13 +1,16 @@
 library(data.table)
 library(sqldf)
 library(dplyr)
+library(rpart)
 
 ################################################################
 ################### PREPARING THE DATA #########################
 ################################################################
 
-# setwd('C:/Users/db345c/Desktop/hw')
-setwd('C:\\Users\\Aleksey\\Documents\\School\\UW_Data_Science\\UW_Data_Science_450\\Final_Project\\Final_Project_Part_2')
+# Windows (w_laptop)
+setwd('C:/Users/db345c/Desktop/hw')
+# Mac
+# setwd('/Users/voitel/TRAINING/UW_Data_Science/UW_Data_Science_450/Final_Project/Final_Project_Part_2')
 df <- read.csv('train.csv')
 dt <- data.table(df)
 
@@ -17,9 +20,9 @@ dt <- dt[!duplicated(dt)]
 
 # Add weekend column (0 - workday, 1 - Weekend)
 print("Started creating 'Weekend' column" )
-dt$Weekend = 0
-dt[dt$Weekday=="Saturday",]$Weekend = 1
-dt[dt$Weekday=="Sunday",]$Weekend = 1
+dt$Weekend = "Workday"
+dt[dt$Weekday=="Saturday",]$Weekend = "Weekend"
+dt[dt$Weekday=="Sunday",]$Weekend = "Weekend"
 print("Finished creating 'Weekend' column")
 
 # Coorect name of the first column of the data table dt
@@ -65,12 +68,91 @@ write.csv(join, file = "preprocessed.csv")
 
 ######### TBD #################################
 
-# Remove original ScanCount column
-join[,5] <- NULL
-
 # Remove duplicates again
 join <- data.table(join)
 join <- join[!duplicated(join)]
+
+# Create the variable to hold the bin size
+join$CartSize <- "NONE"
+
+# Create bins
+huge_return = sd(join$TripTotalItems) * -3
+med_return = sd(join$TripTotalItems) * -2
+small_return = sd(join$TripTotalItems) * -1
+small_purchase = sd(join$TripTotalItems) * 1
+med_purchase = sd(join$TripTotalItems) * 2
+huge_purchase = sd(join$TripTotalItems) * 3
+
+# Mark transactions with Bin Sizes
+join[which(join$TripTotalItems < huge_return),]$CartSize = "Very Large Return"
+join[which(join$TripTotalItems >= huge_return & join$TripTotalItems < join$med_return),]$CartSize = "Large Return"
+join[which(join$TripTotalItems >= med_return & join$TripTotalItems < small_return),]$CartSize = "Medium Return"
+join[which(join$TripTotalItems >= small_return & join$TripTotalItems < 0),]$CartSize = "Small Return"
+join[which(join$TripTotalItems >= 0 & join$TripTotalItems < small_purchase),]$CartSize = "Small Purchase"
+join[which(join$TripTotalItems >= small_purchase & join$TripTotalItems < med_purchase),]$CartSize = "Medium Purchase"
+join[which(join$TripTotalItems >= small_purchase & join$TripTotalItems < huge_purchase),]$CartSize = "Large Purchase"
+join[which(join$TripTotalItems >= huge_purchase),]$CartSize = "Very Large Purchase"
+
+# cleanup
+rm(huge_return, huge_purchase, med_return, med_purchase)
+rm(small_purchase, small_return)
+
+# Remove the columned used to build the cart size
+join[,9] = NULL
+
+################### Binarizing fields and testing #######################
+
+# Select trip type only
+new_join <- subset(join, select=c("TripType"))
+new_join <- as.data.frame(new_join)
+new_join$TripType <- as.factor(new_join$TripType)
+
+# Add Departement Description to new_join
+join$DepartmentDescription <- as.factor(join$DepartmentDescription)
+v_names <- levels(join$DepartmentDescription)
+v_names <- gsub('([[:punct:]])|\\s+',' ', v_names)
+dpt_desc <- model.matrix(~ factor(join$DepartmentDescription) - 1)
+colnames(dpt_desc) <- v_names
+dpt_desc <- as.data.frame(dpt_desc)
+
+new_join <- cbind(new_join, dpt_desc)
+
+# Add Cart Size to new_join
+join$CartSize <- as.factor(join$CartSize)
+v_names <- levels(join$CartSize)
+v_names <- gsub('([[:punct:]])|\\s+',' ', v_names)
+cart_cz <- model.matrix(~ factor(join$CartSize) - 1)
+colnames(cart_cz) <- v_names
+cart_cz <- as.data.frame(cart_cz)
+
+new_join <- cbind(new_join, cart_cz)
+
+# Add WeekDay to new_join
+join$Weekday <- as.factor(join$Weekday)
+v_names <- levels(join$Weekday)
+v_names <- gsub('([[:punct:]])|\\s+',' ', v_names)
+week_d <- model.matrix(~ factor(join$Weekday) - 1)
+colnames(week_d) <- v_names
+week_d <- as.data.frame(week_d)
+
+new_join <- cbind(new_join, week_d)
+
+# Adding scan count to the new_train
+new_join$ScanCount <- join$ScanCount
+
+
+fit <- rpart(TripType ~ ., new_join)
+
+plotcp(fit)
+
+printcp(fit)
+
+pred <- predict(fit, new_join, type = "class")
+
+table(pred)
+
+
+
 
 
 
