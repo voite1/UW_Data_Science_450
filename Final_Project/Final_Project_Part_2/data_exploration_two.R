@@ -6,7 +6,8 @@ library(dplyr)
 ################### PREPARING THE DATA #########################
 ################################################################
 
-setwd('C:/Users/db345c/Desktop/hw')
+# setwd('C:/Users/db345c/Desktop/hw')
+setwd('C:\\Users\\Aleksey\\Documents\\School\\UW_Data_Science\\UW_Data_Science_450\\Final_Project\\Final_Project_Part_2')
 df <- read.csv('train.csv')
 dt <- data.table(df)
 
