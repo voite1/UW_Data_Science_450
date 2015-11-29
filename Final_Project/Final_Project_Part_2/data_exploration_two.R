@@ -8,9 +8,10 @@ library(rpart)
 ################################################################
 
 # Windows (w_laptop)
-setwd('C:/Users/db345c/Desktop/hw')
+# setwd('C:/Users/db345c/Desktop/hw')
 # Mac
 # setwd('/Users/voitel/TRAINING/UW_Data_Science/UW_Data_Science_450/Final_Project/Final_Project_Part_2')
+setwd('C:/Users/Aleksey/Documents/School/UW_Data_Science/UW_Data_Science_450/Final_Project/Final_Project_Part_2')
 df <- read.csv('train.csv')
 dt <- data.table(df)
 
@@ -150,6 +151,15 @@ printcp(fit)
 pred <- predict(fit, new_join, type = "class")
 
 table(pred)
+
+# Build Confusion matrix
+library(caret)
+library(e1071)
+
+conf_matrix <- confusionMatrix(pred, new_join$TripType)
+
+conf_matrix[3]
+# To date, it is junk, but I need to binarize more attributes and see if I can improve the accuracy
 
 
 
